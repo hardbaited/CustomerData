@@ -1,10 +1,10 @@
 {
   "database": {
-      "host": "YOUR_IP_FROM_DB",
-      "port": DB_PORT,
-      "user": "DB_USERNAME",
-      "password": "DB_PASSWORD",
-      "databaseName": "YOUR_DB_DATABASE_NAME"
+      "host": "217.76.58.97",
+      "port": 30001,
+      "user": "gamingmu",
+      "password": "gamingmultiverse!$!",
+      "databaseName": "CustomerData"
   },
   "server": {
       "port": 3000
