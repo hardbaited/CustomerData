@@ -1,0 +1,33 @@
+/* Light mode styles go here */
+/* Dark mode styles */
+.dark-theme {
+    background-color: #23242a;
+    color: #fff;
+    overflow: hidden;
+}
+
+/* Light mode styles */
+p {
+    color: #333;
+}
+
+/* Dark mode styles */
+.dark-theme p {
+    color: #fff;
+}
+
+/* Define styles for dark mode */
+.dark-mode {
+    background-color: #23242a;
+    color: #fff;
+}
+
+/* Define styles for the moon icon */
+.fa-moon {
+    color: #fff;
+}
+
+/* Define styles for the sun icon */
+.fa-sun {
+    color: #ffdb58;
+}

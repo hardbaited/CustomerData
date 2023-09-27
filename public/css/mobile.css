@@ -1,0 +1,17 @@
+/* Apply this CSS to your table for screens with a max-width of 768px (adjust as needed) */
+@media screen and (max-width: 768px) {
+    #customerTable {
+        width: 100%;
+        max-width: 100%;
+        height: 500px; /* Set the desired height for the table */
+        overflow-y: scroll; /* Enable vertical scrolling */
+        white-space: nowrap;
+    }
+
+    /* Apply this CSS to table cells (optional, for styling) */
+    #customerTable th, #customerTable td {
+        padding: 10px;
+        text-align: left;
+        font-size: 16px; /* Adjust font size as needed */
+    }
+}

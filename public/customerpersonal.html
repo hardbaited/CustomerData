@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Data V. - 0.3.2c</title>
+    <link rel="stylesheet" id="themeStylesheet" href="css/style.css">
+    <link rel="stylesheet" id="themeStylesheet" href="css/popup.css">
+    <link rel="stylesheet" id="themeStylesheet" href="css/darktheme.css">
+    <link rel="stylesheet" id="themeStylesheet" href="css/mobile.css">
+    <link rel="stylesheet" id="themeStylesheet" href="css/search.css">
+    <link rel="stylesheet" id="themeStylesheet" href="css/navbar.css">
+    <link rel="stylesheet" id="themeStylesheet" href="css/customerpersonal.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Titillium Web' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-..." crossorigin="anonymous">
+</head>
+<body class="dark-theme">
+    <!-- Content to show when logged in -->
+    <div class="show-when-logged-in">
+        <nav class="navbar">
+            <h1>Customer Panel</h1>
+            <ul>
+                <li><a href="/customer">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="mailto:pantelisxanthos@gmail.com" target="_blank">Contact</a></li>
+                <li><a href="#" id="themeToggle"><i class="fas fa-moon"></i></a></li>
+                <li>
+                    <a id="userName">Welcome, User</a>
+                    <button id="logoutButton"><a>Logout</a></button>
+                </li>                
+            </ul>
+        </nav>    
+
+        <div class="customer-data">
+            <!-- Content to display customer data -->
+            <h2>Personal Customer Card</h2>
+            <p><strong>Ονοματεπώνυμο:</strong>  <button class="editButton" data-edit-form="myModal1"><i class="fas fa-pencil-alt"></i></button><br> <span id="customerName"></span></p>
+            <p><strong>Ημερομηνία Καταχώρισης:</strong><br> <span id="customerDate"></span></p>
+            <p><strong>Description:</strong>  <button class="editButton" data-edit-form="myModal3"><i class="fas fa-pencil-alt"></i></button><br> <span id="customerDescription"></span></p>
+            <p><strong>Διεύθυνση κατοικίας:</strong>  <button class="editButton" data-edit-form="myModal4"><i class="fas fa-pencil-alt"></i></button><br> <span id="customerAddress"></span></p>
+            <p><strong>Όροφος:</strong>  <button class="editButton" data-edit-form="myModal5"><i class="fas fa-pencil-alt"></i></button><br> <span id="customerFloor"></span></p>
+            <p><strong>Κινητό Τηλ:</strong>  <button class="editButton" data-edit-form="myModal6"><i class="fas fa-pencil-alt"></i></button><br> <span id="customerMobilePhone"></span></p>
+            <p><strong>Σταθερό Τηλ:</strong>  <button class="editButton" data-edit-form="myModal7"><i class="fas fa-pencil-alt"></i></button><br> <span id="customerPhone"></span></p>
+            <p><strong>Email:</strong>  <button class="editButton" data-edit-form="myModal8"><i class="fas fa-pencil-alt"></i></button><br> <span id="customerEmail"></span></p>
+            <p><strong>Εργασίες:</strong>  <button class="editButton" data-edit-form="myModal9"><i class="fas fa-pencil-alt"></i></button><br> <span id="customerJobs"></span></p>
+        </div>
+
+
+        <div class="modal" id="myModal1">
+            <div class="modal-content">
+                <span class="close" data-close-modal="myModal1">&times;</span>
+                <h2>Edit Customer Data</h2>
+                <form class="editCustomerForm" data-edit-form="myModal1">
+                    <label for="editName">Name:</label>
+                    <input type="text" id="editName" name="editName">
+                    <button type="submit">Save</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="modal" id="myModal3">
+            <div class="modal-content">
+                <span class="close" data-close-modal="myModal3">&times;</span>
+                <h2>Edit Customer Data</h2>
+                <form class="editCustomerForm" data-edit-form="myModal3">
+                    <label for="editDescription">Description:</label>
+                    <input type="text" id="editDescription" name="editDescription">
+                    <button type="submit">Save</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="modal" id="myModal4">
+            <div class="modal-content">
+                <span class="close" data-close-modal="myModal4">&times;</span>
+                <h2>Edit Customer Data</h2>
+                <form class="editCustomerForm" data-edit-form="myModal4">
+                    <label for="editAdress">Διεύθυνση κατοικίας:</label>
+                    <input type="text" id="editAdress" name="editAdress">
+                    <button type="submit">Save</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="modal" id="myModal5">
+            <div class="modal-content">
+                <span class="close" data-close-modal="myModal5">&times;</span>
+                <h2>Edit Customer Data</h2>
+                <form class="editCustomerForm" data-edit-form="myModal5">
+                    <label for="editFloor">Όροφος:</label>
+                    <input type="text" id="editFloor" name="editFloor">
+                    <button type="submit">Save</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="modal" id="myModal6">
+            <div class="modal-content">
+                <span class="close" data-close-modal="myModal6">&times;</span>
+                <h2>Edit Customer Data</h2>
+                <form class="editCustomerForm" data-edit-form="myModal6">
+                    <label for="editMobilePhone">Κινητό Τηλ:</label>
+                    <input type="text" id="editMobilePhone" name="editMobilePhone">
+                    <button type="submit">Save</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="modal" id="myModal7">
+            <div class="modal-content">
+                <span class="close" data-close-modal="myModal7">&times;</span>
+                <h2>Edit Customer Data</h2>
+                <form class="editCustomerForm" data-edit-form="myModal7">
+                    <label for="editPhone">Σταθερό Τηλ:</label>
+                    <input type="text" id="editPhone" name="editPhone">
+                    <button type="submit">Save</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="modal" id="myModal8">
+            <div class="modal-content">
+                <span class="close" data-close-modal="myModal8">&times;</span>
+                <h2>Edit Customer Data</h2>
+                <form class="editCustomerForm" data-edit-form="myModal8">
+                    <label for="editEmail">Email:</label>
+                    <input type="text" id="editEmail" name="editEmail">
+                    <button type="submit">Save</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="modal" id="myModal9">
+            <div class="modal-content">
+                <span class="close" data-close-modal="myModal9">&times;</span>
+                <h2>Edit Customer Data</h2>
+                <form class="editCustomerForm" data-edit-form="myModal9">
+                    <label for="editJobs">Jobs:</label>
+                    <input type="text" id="editJobs" name="editJobs">
+                    <button type="submit">Save</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Content to show when not logged in -->
+    <div class="hide-when-logged-in">
+        <p class="logintoView">Please log in to view this content.</p>
+        <a class="logintoViewBtn" href="/login.html">Login</a>
+    </div>
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2023 - Pantelis Xanthos</p>
+    </footer>
+     
+    <!-- JavaScript code -->
+    <script type="text/javascript" src="js/customerpersonal.js"></script>
+    <script type="text/javascript" src="js/darkmode.js"></script>
+</body>
+</html>

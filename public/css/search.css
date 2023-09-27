@@ -1,0 +1,41 @@
+/* Initially hide the search input */
+.search-container input[type="text"] {
+    padding: 0;
+    border: none;
+    border-radius: 20px;
+    outline: none;
+    background-color: transparent;
+    width: 0;
+    transition: width 0.4s ease-in-out, padding 0.4s ease-in-out;
+    vertical-align: middle; /* Align vertically in the middle */
+}
+
+/* Style the search button with search icon */
+.search-container #searchButton {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    transition: transform 0.4s ease-in-out;
+    padding: 10px; /* Add padding to match the initial width of the search input */
+    vertical-align: middle; /* Align vertically in the middle */
+}
+
+/* Style the search icon */
+.search-container #searchButton i {
+    font-size: 20px;
+    transition: transform 0.4s ease-in-out;
+}
+
+/* Expand the search input on button click */
+.search-container.expanded input[type="text"] {
+    width: 200px; /* Adjust the width to your preference */
+    padding: 10px; /* Restore padding when expanded */
+    background-color: #fff;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+}
+
+/* Rotate the search icon on button click */
+.search-container.expanded #searchButton i {
+    transform: rotate(90deg); /* Rotate the icon 90 degrees */
+}

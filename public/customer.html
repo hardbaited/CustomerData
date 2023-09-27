@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Data V. - 0.3.2c</title>
+    <link rel="stylesheet" id="themeStylesheet" href="css/style.css">
+    <link rel="stylesheet" id="themeStylesheet" href="css/popup.css">
+    <link rel="stylesheet" id="themeStylesheet" href="css/darktheme.css">
+    <link rel="stylesheet" id="themeStylesheet" href="css/mobile.css">
+    <link rel="stylesheet" id="themeStylesheet" href="css/search.css">
+    <link rel="stylesheet" id="themeStylesheet" href="css/navbar.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Titillium Web' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-... (include the integrity and crossorigin attributes)">
+</head>
+<body class="dark-theme">
+    <!-- Content to show when logged in -->
+    <div class="show-when-logged-in">
+        <nav class="navbar">
+            <h1>Customer Panel</h1>
+            <div class="search-container">
+                <input type="text" id="searchInput" onkeyup="searchCustomer()" placeholder="Search.." title="Type in a category">
+                <button id="searchButton"><i class="fas fa-search"></i></button>
+            </div>
+            <ul>
+                <li><a href="/customer">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="mailto:pantelisxanthos@gmail.com" target="_blank">Contact</a></li>
+                <li><a><button id="openFormButton">New Customer</button></a></li>
+                <li><a href="#" id="themeToggle"><i class="fas fa-moon"></i></a></li>
+                <li>
+                    <a id="userName">Welcome, User</a>
+                    <button id="logoutButton"><a>Logout</a></button>
+                </li>                
+            </ul>
+        </nav>    
+
+        <!-- Create a pop-up container -->
+        <div id="popupContainer" class="popup">
+            <div class="popup-content">
+                <!-- Form content -->
+                <span class="close" id="closeFormButton">&times;</span>
+                <form id="addCustomerForm">
+                    <div class="form-group">
+                        <label for="name">Ονοματεπώνυμο:</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+        
+                    <div class="form-group">
+                        <label for="customerMobilePhone">Κινητό Τηλ:</label>
+                        <input type="text" id="customerMobilePhone" name="customerMobilePhone" required>
+                    </div>
+        
+                    <button type="button" id="addCustomerButton">Submit</button>
+                    <div class="OrUploadAFile">Or Upload a .xlsx File</div>
+                    <input type="file" id="fileInput" accept=".xlsx">
+                    <button type="button" id="uploadButton">Upload</button>
+                </form>
+            </div>
+        </div>    
+
+
+        <p id="message"></p>
+
+        <table id="customerTable">
+            <thead>
+                <tr>
+                    <th id="idHeader">Id</th>
+                    <th id="nameHeader">Ονοματεπώνυμο</th>
+                    <th>Κινητό Τηλ - Σταθερό Τηλ</th>
+                </tr>
+            </thead>
+            <tbody id="customerTableBody">
+                <!-- Customer data rows are managed by js -->
+            </tbody>
+        </table>
+        
+        <div id="paginationControls">
+            <!-- Pagination is managed by js -->
+        </div>    
+    </div>
+
+    <!-- Content to show when not logged in -->
+    <div class="hide-when-logged-in">
+        <p class="logintoView">Please log in to view this content.</p>
+        <a class="logintoViewBtn" href="/login.html">Login</a>
+    </div>
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2023 - Pantelis Xanthos</p>
+    </footer>
+     
+    <!-- JavaScript code -->
+    <script type="text/javascript" src="js/script.js"></script>
+    <script type="text/javascript" src="js/darkmode.js"></script>
+    <script type="text/javascript" src="js/popup.js"></script>
+</body>
+</html>

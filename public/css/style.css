@@ -1,0 +1,145 @@
+#customerTable {
+    border-radius: 15px;
+    overflow: hidden; /* To ensure the border-radius is applied correctly */
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #333;
+    color: #fff;
+    margin-top: 2%;
+}
+
+#customerTable th, #customerTable td {
+    padding: 8px;
+    text-align: left;
+    border: 1px solid #555;
+}
+
+#customerTable th {
+    background-color: #666;
+    font-weight: bold;
+}
+
+#customerTable tbody tr:nth-child(even) {
+    background-color: #555;
+}
+
+#customerTable tbody tr:hover {
+    background-color: #666;
+}
+
+#idHeader:hover {
+    cursor: pointer;
+    background: #555;
+}
+
+#customerTable input[type="text"] {
+    width: 100%;
+    padding: 4px;
+    box-sizing: border-box;
+    border: none;
+    background-color: transparent;
+    color: #fff;
+}
+
+#customerTable tbody tr td:first-child {
+    cursor: pointer;
+}
+
+#customerTable tbody tr td:nth-child(2) {
+    min-width: 150px; /* Adjust the width as needed */
+    padding: 10px 25px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+#customerTable tbody tr td:nth-child(3) {
+    min-width: 150px; /* Adjust the width as needed */
+}
+
+#customerTable tbody tr td:nth-child(4) {
+    min-width: 150px; /* Adjust the width as needed */
+}
+
+#nameHeader:hover {
+    cursor: pointer;
+    background: #555;
+}
+
+/* Stylish Pagination Controls */
+#paginationControls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+#paginationControls a {
+    display: inline-block;
+    padding: 10px 15px;
+    margin: 0 5px;
+    background-color: #333;
+    color: white;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+#paginationControls a:hover {
+    background-color: #555;
+}
+
+#paginationControls .active {
+    background-color: #555;
+    cursor: default;
+}
+
+.current-page {
+    color: red; /* Change the color to your desired color */
+    font-weight: bold; /* Optionally, apply other styles as needed */
+}
+
+#openFormButton {
+    background-color: transparent;
+    border-style: none;
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.logintoView {
+    position: absolute;
+    text-align: center;
+    text-transform: uppercase;
+    font-family: 'Titillium Web';font-size: 40px;
+    left: 30%;
+}
+
+.logintoViewBtn {
+    position: absolute;
+    left: 46%;
+    top: 15%;
+    margin-top: 30px; /* Add spacing between text and button */
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: white;
+    text-decoration: none;
+    border-radius: 15px;
+    font-weight: bold;
+}
+
+/* Style the button on hover */
+.logintoViewBtn:hover {
+    background-color: #0056b3;
+}
+
+footer {
+    background: transparent;
+    color: #fff;
+    text-align: center;
+    padding: 5px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    left: 0px;
+}
