@@ -64,7 +64,6 @@ app.post('/insert', (req, res) => {
             console.error('Error inserting data:', err);
             return res.status(500).json({ success: false, error: 'Failed to insert data' });
         } else {
-            console.log('Data inserted successfully');
             return res.json({ success: true });
         }
     });
@@ -137,7 +136,6 @@ app.post('/upload', upload.single('file'), (req, res) => {
                 if (err) {
                     console.error('Error inserting data:', err);
                 } else {
-                    console.log('Data inserted successfully!');
                     fetchAndSendData(res);
                 }
             });
@@ -155,14 +153,13 @@ app.post('/upload', upload.single('file'), (req, res) => {
 app.post(`/update-customer`, upload.none(), (req, res) => {
     const customerID = req.query.id; // Retrieve the customer ID from the query parameter
     const fieldsToUpdate = [
-        { requestField: "editName", dbColumn: "Name" },
-        { requestField: "editDescription", dbColumn: "Description" },
-        { requestField: "editAdress", dbColumn: "Address" },
-        { requestField: "editFloor", dbColumn: "Floor" },
-        { requestField: "editMobilePhone", dbColumn: "MobilePhone" },
-        { requestField: "editPhone", dbColumn: "Phone" },
-        { requestField: "editEmail", dbColumn: "Email" },
-        { requestField: "editJobs", dbColumn: "Jobs" },
+        { requestField: "Name", dbColumn: "Name" },
+        { requestField: "Description", dbColumn: "Description" },
+        { requestField: "Adress", dbColumn: "Address" },
+        { requestField: "Floor", dbColumn: "Floor" },
+        { requestField: "MobilePhone", dbColumn: "MobilePhone" },
+        { requestField: "Phone", dbColumn: "Phone" },
+        { requestField: "Email", dbColumn: "Email" },
     ];
 
     // Construct the SQL query dynamically based on which fields are provided
@@ -192,7 +189,6 @@ app.post(`/update-customer`, upload.none(), (req, res) => {
             return res.status(500).json({ success: false, error: "Failed to update customer data" });
         }
 
-        console.log("Customer data updated successfully");
         return res.json({ success: true });
     });
 });
@@ -314,7 +310,6 @@ app.post('/insertJob', (req, res) => {
                 console.error('Error writing Jobs.json:', err);
                 return res.status(500).json({ success: false, error: 'Failed to insert job data' });
             } else {
-                console.log('Job data inserted successfully');
                 return res.json({ success: true });
             }
         });
@@ -339,18 +334,8 @@ app.get('/getJobsData', (req, res) => {
     });
 });
 
-// Load JSON data from the file
-function loadJobsData() {
-    try {
-        const data = fs.readFileSync('Jobs.json', 'utf8');
-        return JSON.parse(data);
-    } catch (error) {
-        console.error('Error loading Jobs.json:', error);
-        return [];
-    }
-}
-
-function updateJobsDataOnServer(customerID, updatedJobsData) {
+// Update the job data for the specific customer
+function updateJobDataOnServer(customerID, jobName, jobDate) {
     // Load existing job data from the JSON file
     fs.readFile(jobsFilePath, 'utf8', (err, data) => {
         if (err) {
@@ -366,15 +351,26 @@ function updateJobsDataOnServer(customerID, updatedJobsData) {
             jobsArray = JSON.parse(data);
         }
 
-        // Update the job data for the specific customer
-        const updatedCustomerIndex = jobsArray.findIndex(customer => customer.customerID === customerID);
+        // Find the matching job data if it exists
+        const matchingJobIndex = jobsArray.findIndex((job) => job.customerID === customerID);
 
-        if (updatedCustomerIndex !== -1) {
-            // Replace the old job data with the updated data
-            jobsArray[updatedCustomerIndex].jobs = updatedJobsData;
+        if (matchingJobIndex !== -1) {
+
+            // Check if the jobName and jobDate already exist for this customer
+            const existingJobIndex = jobsArray.findIndex((jobData) => jobData.customerID === customerID && jobData.jobName === jobName);
+            
+            if (existingJobIndex !== -1) {
+                // Update the existing jobName and jobDate
+                
+                jobsArray[existingJobIndex].jobName = jobName;
+                jobsArray[existingJobIndex].jobDate = jobDate;
+            } else {
+                // Add a new entry for the jobName and jobDate
+                jobsArray.push({ customerID, jobName, jobDate });
+            }
         } else {
             // If the customer doesn't exist, create a new entry
-            jobsArray.push({ customerID, jobs: updatedJobsData });
+            jobsArray.push({ customerID, jobName, jobDate });
         }
 
         // Write the updated data back to the JSON file
@@ -385,7 +381,6 @@ function updateJobsDataOnServer(customerID, updatedJobsData) {
                 return;
             }
 
-            console.log('Job data updated successfully');
             // Handle success and return an appropriate response
         });
     });
@@ -393,14 +388,14 @@ function updateJobsDataOnServer(customerID, updatedJobsData) {
 
 // REST endpoint to receive updated job data
 app.post('/updateJobsData', express.json(), (req, res) => {
-    const { customerID, updatedJobsData } = req.body;
+    const { customerID, jobName, JobDate } = req.body;
 
-    if (!customerID || !updatedJobsData) {
+    if (!customerID || !jobName || !JobDate) {
         return res.status(400).json({ success: false, error: 'Invalid data' });
     }
 
     // Call the function to update job data on the server
-    updateJobsDataOnServer(customerID, updatedJobsData);
+    updateJobDataOnServer(customerID, jobName, JobDate);
 
     return res.json({ success: true });
 });

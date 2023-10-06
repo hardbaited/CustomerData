@@ -1,1 +1,42 @@
-[{"customerID":"1","jobName":"Service ΦΑ","jobDate":"2023-02-26"},{"customerID":"1","jobName":"Υδραυλικά","jobDate":"2023-05-10"},{"customerID":"1","jobName":"Service Πετρελαίου","jobDate":"2022-04-05"}]
+[
+  {
+    "customerID": "1",
+    "jobName": "Υδραυλικά",
+    "jobDate": "2023-02-06"
+  },
+  {
+    "customerID": "1",
+    "jobName": "Service ΦΑ",
+    "jobDate": "2023-05-20"
+  },
+  {
+    "customerID": "1",
+    "jobName": "Service A/C",
+    "jobDate": "2023-02-25"
+  },
+  {
+    "customerID": "2",
+    "jobName": "Υδραυλικά",
+    "jobDate": "2022-02-06"
+  },
+  {
+    "customerID": "2",
+    "jobName": "Service ΦΑ",
+    "jobDate": "2022-05-26"
+  },
+  {
+    "customerID": "1",
+    "jobName": "Ανακαινιση",
+    "jobDate": "2023-02-06"
+  },
+  {
+    "customerID": "1",
+    "jobName": "Εγκαταστάσεις A/C",
+    "jobDate": "2022-02-25"
+  },
+  {
+    "customerID": "3",
+    "jobName": "Υδραυλικά",
+    "jobDate": "2023-02-25"
+  }
+]

@@ -53,11 +53,6 @@
     min-width: 150px; /* Adjust the width as needed */
 }
 
-#nameHeader:hover {
-    cursor: pointer;
-    background: #555;
-}
-
 /* Stylish Pagination Controls */
 #paginationControls {
     display: flex;

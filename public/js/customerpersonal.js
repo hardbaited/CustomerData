@@ -158,47 +158,13 @@ function sendDataToServer(data) {
     });
 }
 
-function updateJobsDataOnServer(updatedJobsData) {
-    // Make an HTTP POST request to update the jobs data on the server
-    fetch('/updateJobsData', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ jobsData: updatedJobsData }),
-    })
-        .then((response) => response.json())
-        .then((data) => {
-            if (data.success) {
-                console.log('Jobs data updated on the server');
-            } else {
-                console.error('Error updating jobs data on the server');
-            }
-        })
-        .catch((error) => {
-            console.error('Error updating jobs data:', error);
-        });
-}
-
 document.addEventListener('DOMContentLoaded', function () {
     const params = new URLSearchParams(window.location.search);
     const customerForm = document.getElementById('customerForm'); // Get the form
     const customerID = params.get("id"); // Retrieve the customer ID from the URL parameter
 
-    // Define a variable to store the loaded job data
-    let jobsData = [];
-
-    // Function to update the job date on the server
-    function updateJobDate(jobName, updatedJobDate) {
-        // Find the matching job data and update the date
-        const updatedJobIndex = jobsData.findIndex((job) => job.jobName === jobName);
-        if (updatedJobIndex !== -1) {
-            jobsData[updatedJobIndex].jobDate = updatedJobDate;
-
-            // Update the JSON data on the server (you'll need to implement this)
-            updateJobsDataOnServer(jobsData, customerID); // Include the customerID
-        }
-    }
+    // Define a variable to store the selected job name
+    let selectedJobName = null;
 
     // Make an HTTP request to fetch job data from the server
     fetch(`/getJobsData?customerID=${customerID}`)
@@ -214,7 +180,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     // Create a new row element
                     const newRow = document.createElement('div');
-                    newRow.className = 'editCustomerForm'; // Add appropriate class name
+                    newRow.className = 'editCustomerFormJobs'; // Add appropriate class name
                     newRow.style.display = 'none'; // Initially hide the row
 
                     // Create a paragraph element for displaying the name
@@ -239,12 +205,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     // Append the new row to the customerForm
                     customerForm.appendChild(newRow);
 
-                    // Add a change event listener to the input element to update the job date
-                    newInput.addEventListener('change', function () {
-                        const updatedJobDate = newInput.value;
-                        updateJobDate(jobName, updatedJobDate);
-                    });
-
                     // Add a click event listener to the dropdown link
                     link.addEventListener('click', function (e) {
                         e.preventDefault();
@@ -257,8 +217,11 @@ document.addEventListener('DOMContentLoaded', function () {
                         // Add the "active" class to the clicked dropdown link
                         link.classList.add('active');
 
+                        // Update the selectedJobName variable
+                        selectedJobName = jobName;
+
                         // Hide all editCustomerForm rows
-                        const allEditCustomerForms = document.querySelectorAll('.editCustomerForm');
+                        const allEditCustomerForms = document.querySelectorAll('.editCustomerFormJobs');
                         allEditCustomerForms.forEach((form) => {
                             form.style.display = 'none';
                         });
@@ -277,28 +240,48 @@ document.addEventListener('DOMContentLoaded', function () {
 
         customerForm.addEventListener('submit', function (e) {
             e.preventDefault();
-        
+    
             // Get the selected job name from the clicked dropdown link
             const activeLink = document.querySelector('.dropdown-link.active');
-        
+    
             if (activeLink) {
                 const selectedJob = activeLink.textContent;
-                const jobDate = document.getElementById(`jobDate-${selectedJob}`).value;
-        
+                const jobDateInput = document.getElementById(`jobDate-${selectedJob}`);
+                const jobDate = jobDateInput.value;
+    
                 // Create a JSON object with the collected data
                 const jobData = {
-                    jobName: selectedJob,
-                    jobDate: jobDate,
                     customerID: customerID,
+                    jobName: selectedJob,
+                    JobDate: jobDate,
                 };
-        
-                // Send the JSON object to the server (you'll need to implement this)
-                sendDataToServer(jobData);
+                
+                // Make an HTTP POST request to update the server-side data
+                fetch('/updateJobsData', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(jobData), // Send the JSON data to the server
+                })
+                .then((response) => response.json())
+                .then((result) => {
+                    if (result.success) {
+                        // Handle success
+                        window.location.reload();
+                    } else {
+                        // Log the error response for debugging
+                        console.error('Data update on the server failed:', result.error);
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
             } else {
                 // Handle the case when no active dropdown link is found
                 console.error('No active dropdown link found.');
             }
-        });        
+        });    
 });
 
 // Check if the user is logged in by examining session data
@@ -318,13 +301,37 @@ const modals = document.querySelectorAll(".modal");
 
 // Add a click event listener to each edit button
 editButtons.forEach((editButton) => {
-    editButton.addEventListener("click", () => {
+    editButton.addEventListener("click", async () => {
         // Find the associated modal using the data attribute
         const modalId = editButton.getAttribute("data-edit-form");
         const modal = document.getElementById(modalId);
 
         // Show the modal
         modal.style.display = "block";
+
+
+        const params = new URLSearchParams(window.location.search);
+        const customerID = params.get("id"); // Retrieve the customer ID from URL parameter
+
+        // Find the associated edit form
+        const editForm = modal.querySelector(".editCustomerForm");
+
+        try {
+            // Fetch the old data for the customer from the server
+            const oldDataResponse = await fetch(`/getCustomerByID?id=${customerID}`);
+            if (!oldDataResponse.ok) {
+                throw new Error(`HTTP error! Status: ${oldDataResponse.status}`);
+            }
+            const oldData = await oldDataResponse.json();
+            // Populate the form fields with the old data
+            editForm.querySelectorAll('input').forEach((input) => {
+            const fieldName = input.getAttribute('name');
+            input.value = oldData.data[fieldName];
+            });
+        } catch (error) {
+            console.error("Error fetching customer data:", error);
+            // Handle the error (e.g., show an error message)
+        }
     });
 });
 
@@ -391,7 +398,6 @@ editForms.forEach((editForm) => {
 
             const data = await response.json();
             // Handle the response data (e.g., show a success message)
-            console.log(data);
 
             // Close the associated modal when done
             modal.style.display = "none";
