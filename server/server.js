@@ -1,7 +1,6 @@
 const express = require('express');
 const session = require('express-session'); // Add this line
-const mysql = require('mysql2');
-const bcrypt = require('bcrypt');
+const mysql = require('mysql');
 const bodyParser = require('body-parser');
 const multer = require('multer');
 const xlsx = require('xlsx');
@@ -16,10 +15,10 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.use(session({
-    secret: 'aDSASDAsdahdgHAJSGDHJAGADShjgaIUWEU*(Q@#*E#YAWSUDAUSD', // Replace with a secret key for session encryption
-    resave: false,
+    secret: 'secret',
+    resave: true,
     saveUninitialized: true
-}));
+  }));
 
 const connection = mysql.createConnection({
     host: config.database.host,
@@ -228,22 +227,16 @@ app.post('/login', (req, res) => {
 
         const user = results[0];
 
-        // Compare the provided password with the hashed password from the database
-        bcrypt.compare(password, user.password, (bcryptErr, result) => {
-            if (bcryptErr) {
-                return res.status(500).json({ message: 'Internal Server Error' });
-            }
+        // Compare the provided password with the password from the database (no hashing)
+        if (password !== user.password) {
+            return res.status(401).json({ message: 'Invalid username or password' });
+        }
 
-            if (!result) {
-                return res.status(401).json({ message: 'Invalid username or password' });
-            }
+        // Store user data in the session upon successful login
+        req.session.user = user;
 
-            // Store user data in the session upon successful login
-            req.session.user = user;
-
-            // Redirect to customer.html after successful login
-            res.json({ success: true, message: 'Login successful' });
-        });
+        // Redirect to customer.html after successful login
+        res.json({ success: true, message: 'Login successful' });
     });
 });
 
@@ -282,23 +275,132 @@ app.get('/check-auth', (req, res) => {
     }
 });
 
+const jobsFilePath = path.join(__dirname, 'Jobs.json');
 
+app.post('/insertJob', (req, res) => {
+    const { jobName, jobDate, customerID } = req.body;
 
+    if (!jobName || !jobDate || !customerID) {
+        return res.status(400).json({ success: false, error: 'Invalid data' });
+    }
 
+    // Create a JavaScript object to represent the new job data
+    const jobData = {
+        customerID: customerID, // Include the customer ID
+        jobName: jobName,
+        jobDate: jobDate,
+    };
 
+    // Read the current data from the Jobs.json file
+    fs.readFile(jobsFilePath, 'utf8', (err, data) => {
+        if (err) {
+            console.error('Error reading Jobs.json:', err);
+            return res.status(500).json({ success: false, error: 'Failed to read job data' });
+        }
 
+        let jobsArray = [];
 
-const saltRounds = 10; // Number of salt rounds for hashing
+        // If the file contains data, parse it
+        if (data) {
+            jobsArray = JSON.parse(data);
+        }
 
-// Password you want to hash
-const plaintextPassword = 'D5};Fa^/`m*u4X)8';
+        // Add the new job data to the array
+        jobsArray.push(jobData);
 
-// Generate a salt and hash the password
-bcrypt.hash(plaintextPassword, saltRounds, (err, hash) => {
-  if (err) {
-    console.error('Hashing error:', err);
-  } else {
-    // The 'hash' variable contains the hashed password
-    console.log('Hashed password:', hash);
-  }
+        // Write the updated data back to the Jobs.json file
+        fs.writeFile(jobsFilePath, JSON.stringify(jobsArray), 'utf8', (err) => {
+            if (err) {
+                console.error('Error writing Jobs.json:', err);
+                return res.status(500).json({ success: false, error: 'Failed to insert job data' });
+            } else {
+                console.log('Job data inserted successfully');
+                return res.json({ success: true });
+            }
+        });
+    });
+});
+
+app.get('/getJobsData', (req, res) => {
+    const customerID = req.query.customerID; // Retrieve the customerID from the query parameter
+
+    // Read the Jobs.json file and send its contents as JSON
+    fs.readFile(jobsFilePath, 'utf8', (err, data) => {
+        if (err) {
+            console.error('Error reading Jobs.json:', err);
+            return res.status(500).json({ success: false, error: 'Failed to read job data' });
+        }
+
+        // Parse the data and filter it for the specific customerID
+        const jobsData = JSON.parse(data);
+        const filteredJobsData = jobsData.filter((job) => job.customerID === customerID);
+
+        res.json({ success: true, data: filteredJobsData });
+    });
+});
+
+// Load JSON data from the file
+function loadJobsData() {
+    try {
+        const data = fs.readFileSync('Jobs.json', 'utf8');
+        return JSON.parse(data);
+    } catch (error) {
+        console.error('Error loading Jobs.json:', error);
+        return [];
+    }
+}
+
+function updateJobsDataOnServer(customerID, updatedJobsData) {
+    // Load existing job data from the JSON file
+    fs.readFile(jobsFilePath, 'utf8', (err, data) => {
+        if (err) {
+            console.error('Error reading Jobs.json:', err);
+            // Handle the error and return an appropriate response
+            return;
+        }
+
+        let jobsArray = [];
+
+        // If the file contains data, parse it
+        if (data) {
+            jobsArray = JSON.parse(data);
+        }
+
+        // Update the job data for the specific customer
+        const updatedCustomerIndex = jobsArray.findIndex(customer => customer.customerID === customerID);
+
+        if (updatedCustomerIndex !== -1) {
+            // Replace the old job data with the updated data
+            jobsArray[updatedCustomerIndex].jobs = updatedJobsData;
+        } else {
+            // If the customer doesn't exist, create a new entry
+            jobsArray.push({ customerID, jobs: updatedJobsData });
+        }
+
+        // Write the updated data back to the JSON file
+        fs.writeFile(jobsFilePath, JSON.stringify(jobsArray, null, 2), 'utf8', (err) => {
+            if (err) {
+                console.error('Error writing Jobs.json:', err);
+                // Handle the error and return an appropriate response
+                return;
+            }
+
+            console.log('Job data updated successfully');
+            // Handle success and return an appropriate response
+        });
+    });
+}
+
+// REST endpoint to receive updated job data
+app.post('/updateJobsData', express.json(), (req, res) => {
+    const { customerID, updatedJobsData } = req.body;
+
+    if (!customerID || !updatedJobsData) {
+        return res.status(400).json({ success: false, error: 'Invalid data' });
+    }
+
+    // Call the function to update job data on the server
+    updateJobsDataOnServer(customerID, updatedJobsData);
+
+    return res.json({ success: true });
 });

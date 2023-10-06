@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Customer Data V. - 0.3.2c</title>
+    <title>Customer Personal Card V. - 0.8.1a</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
     <link rel="stylesheet" id="themeStylesheet" href="css/style.css">
     <link rel="stylesheet" id="themeStylesheet" href="css/popup.css">
     <link rel="stylesheet" id="themeStylesheet" href="css/darktheme.css">
@@ -135,13 +136,24 @@
             <div class="modal-content">
                 <span class="close" data-close-modal="myModal9">&times;</span>
                 <h2>Edit Customer Data</h2>
-                <form class="editCustomerForm" data-edit-form="myModal9">
-                    <label for="editJobs">Jobs:</label>
-                    <input type="text" id="editJobs" name="editJobs">
-                    <button type="submit">Save</button>
+                <form id="customerForm">
+                    <div class="dropdown">
+                        <a class="dropbtn">Εργασίες</a>
+                        <div class="dropdown-content">
+                            <a class="dropdown-link" data-job="Υδραυλικά">Υδραυλικά</a>
+                            <a class="dropdown-link" data-job="Service ΦΑ">Service ΦΑ</a>
+                            <a class="dropdown-link" data-job="Service Πετρελαίου">Service Πετρελαίου</a>
+                            <a class="dropdown-link" data-job="Service A/C">Service A/C</a>
+                            <a class="dropdown-link" data-job="Ανακαινιση">Ανακαινιση</a>
+                            <a class="dropdown-link" data-job="Εγκαταστάσεις Αερίου/Πετρελαίου/Pellet">Εγκαταστάσεις Αερίου/Πετρελαίου/Pellet</a>
+                            <a class="dropdown-link" data-job="Εγκαταστάσεις A/C">Εγκαταστάσεις A/C</a>
+                        </div>
+                    </div><br><br><br>
+                    <!-- Add an ID for the date input -->
+                    <br><button type="submit">Save</button>
                 </form>
             </div>
-        </div>
+        </div>        
     </div>
 
     <!-- Content to show when not logged in -->

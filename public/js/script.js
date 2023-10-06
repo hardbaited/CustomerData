@@ -10,7 +10,7 @@ const searchContainer = document.querySelector(".search-container");
 let originalCustomerData = []; // Add this global variable
 let sortOrder = "asc"; // Default sorting order is ascending (A to Z)
 
-const itemsPerPage = 18;
+const itemsPerPage = 15;
 let currentPage = 1;
 let totalEntries = 0;
 
