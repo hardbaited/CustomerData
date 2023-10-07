@@ -18,7 +18,7 @@ app.use(session({
     secret: 'secret',
     resave: true,
     saveUninitialized: true
-  }));
+}));
 
 const connection = mysql.createConnection({
     host: config.database.host,
@@ -26,6 +26,9 @@ const connection = mysql.createConnection({
     user: config.database.user,
     password: config.database.password,
     database: config.database.databaseName,
+    waitForConnections: true, // This is important to prevent timeouts
+    connectionLimit: 10, // Adjust the limit based on your requirements
+    queueLimit: 0, // No limit on the number of queued connections
 });
 
 connection.connect((err) => {
