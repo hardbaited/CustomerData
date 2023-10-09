@@ -1,6 +1,6 @@
 {
   "name": "customer-panel",
-  "version": "0.3.2c",
+  "version": "0.9.7d",
   "description": "Just a customer panel",
   "main": "server.js",
   "dependencies": {
