@@ -1,9 +1,11 @@
 /* Default styles for customer data */
+* {
+  overflow: auto;
+}
 .customer-data {
     padding: 20px;
     margin: 20px;
     margin: 0 auto; /* Center-align the content */
-    overflow: auto;
 }
 
 .customer-data h2 {
