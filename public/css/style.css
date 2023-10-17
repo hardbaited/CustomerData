@@ -131,3 +131,15 @@ footer {
     width: 100%;
     left: 0px;
 }
+
+#customsearch {
+    position: absolute;
+    left: 94%;
+    border: none;
+    border-radius: 15px;
+    top: 7.4%;
+    background: #333;
+    color: white;
+    font-size: 15px;
+    padding: 5px;
+}

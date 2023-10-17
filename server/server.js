@@ -337,6 +337,46 @@ app.get('/getJobsData', (req, res) => {
     });
 });
 
+app.get('/getJobDates', (req, res) => {
+    const selectedJob = req.query.job; // Retrieve the selected job from the query parameter
+
+    // Read the Jobs.json file and send its contents as JSON
+    fs.readFile(jobsFilePath, 'utf8', (err, data) => {
+        if (err) {
+            console.error('Error reading Jobs.json:', err);
+            return res.status(500).json({ success: false, error: 'Failed to read job data' });
+        }
+
+        // Parse the data
+        const jobsData = JSON.parse(data);
+
+        // Filter jobs based on the selected job
+        const jobsForSelectedJob = jobsData.filter((job) => job.jobName === selectedJob);
+        
+        // Extract unique dates from the selected job data
+        const uniqueDates = [...new Set(jobsForSelectedJob.map((job) => job.jobDate))];
+
+        res.json({ success: true, data: uniqueDates });
+    });
+});
+
+app.get('/getJobDatesSearch', (req, res) => {
+    fs.readFile(jobsFilePath, 'utf8', (err, data) => {
+        if (err) {
+            res.status(500).json({ success: false, error: 'Failed to load job data.' });
+        } else {
+            try {
+                const jobsData = JSON.parse(data);
+                
+
+                res.json({ success: true, data: jobsData });
+            } catch (parseError) {
+                res.status(500).json({ success: false, error: 'Failed to parse job data.' });
+            }
+        }
+    });
+});
+
 // Update the job data for the specific customer
 function updateJobDataOnServer(customerID, jobName, jobDate) {
     // Load existing job data from the JSON file

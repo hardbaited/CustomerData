@@ -9,8 +9,7 @@ const searchButton = document.getElementById("searchButton");
 const searchContainer = document.querySelector(".search-container");
 let originalCustomerData = []; // Add this global variable
 let sortOrder = "asc"; // Default sorting order is ascending (A to Z)
-
-const itemsPerPage = 15;
+const itemsPerPage = 13;
 let currentPage = 1;
 let totalEntries = 0;
 
@@ -111,9 +110,8 @@ function sortAndDisplayData(page) {
     updatePagination();
 }
 
-// Function to filter and display matching rows in the table
 function searchCustomer() {
-    const searchInputValue = document.getElementById("searchInput").value.toLowerCase().trim();
+    const searchInputValue = searchInput.value.toLowerCase().trim();
 
     // Filter the original data based on the search input
     customerData = originalCustomerData.filter((customer) => {
@@ -135,26 +133,27 @@ function searchCustomer() {
     sortAndDisplayData(currentPage);
 }
 
-function displayPage(pageNumber, data) {
+function displayPage(pageNumber) {
     const rows = tableBody.getElementsByTagName("tr");
 
     for (let i = 0; i < rows.length; i++) {
         const dataIndex = i + (pageNumber - 1) * itemsPerPage;
-        const rowData = data[dataIndex];
 
-        if (rowData) {
+        if (dataIndex >= 0 && dataIndex < totalEntries) {
             // Display the row and populate it with data from the server response
             rows[i].style.display = "";
             const cells = rows[i].getElementsByTagName("td");
+            const rowData = customerData[dataIndex];
             cells[0].textContent = rowData.ID;
             cells[1].textContent = rowData.Name;
             cells[2].textContent = rowData.MobilePhone;
         } else {
-            // Hide the row if there's no data for that row
+            // Hide the row if it's not within the current page range
             rows[i].style.display = "none";
         }
     }
 }
+
 
 function updatePagination() {
     const totalPages = Math.ceil(totalEntries / itemsPerPage);
@@ -381,4 +380,165 @@ fetch('/check-auth') // Create a server route to check authentication status
     })
     .catch((error) => {
         console.error('Error checking authentication status:', error);
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    // Get references to job and date dropdown elements
+    const jobDropdown = document.querySelector(".btn-group.dropdown:first-child");
+    const dateDropdown = document.getElementById("dateDropdown");
+    const searchButton = document.getElementById("CustomSearchButton");
+
+    // Function to add unique date options (years) to the dropdown
+    function addUniqueDateOption(year) {
+        const dateOption = document.createElement("li");
+        dateOption.innerHTML = `<a class="dropdown-item" data-date="${year}">${year}</a>`;
+        dateDropdown.appendChild(dateOption);
+    }
+
+    jobDropdown.addEventListener("click", (e) => {
+        if (e.target.classList.contains("dropdown-item")) {
+            const selectedJob = e.target.getAttribute("data-job");
+
+            // Clear previous date options
+            dateDropdown.innerHTML = "";
+
+            // Create a Set to store unique years
+            const uniqueYears = new Set();
+
+            // Make an HTTP request to get dates for the selected job
+            fetch(`/getJobDates?job=${selectedJob}`)
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.success) {
+                        const dates = data.data;
+
+                        // Iterate through the dates and add unique years to the set
+                        dates.forEach((date) => {
+                            const year = new Date(date).getFullYear();
+                            uniqueYears.add(year);
+                        });
+
+                        // Populate date options based on the unique years
+                        uniqueYears.forEach((year) => {
+                            addUniqueDateOption(year);
+                        });
+
+                        // Set the selected job as the button text
+                        const jobButton = jobDropdown.querySelector(".btn-secondary");
+                        if (jobButton) {
+                            jobButton.textContent = selectedJob;
+                        }
+
+                        // Reset the date button if no unique years are found
+                        const dateButton = dateDropdown.previousElementSibling;
+                        if (dateButton && uniqueYears.size === 0) {
+                            dateButton.textContent = "Ημερομηνία";
+                        }
+                    } else {
+                        console.error('Failed to retrieve job dates:', data.error);
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error fetching job dates:', error);
+                });
+        }
+    });
+
+    dateDropdown.addEventListener("click", (e) => {
+        if (e.target.classList.contains("dropdown-item")) {
+            // Get the selected date from the clicked item
+            const selectedDate = e.target.getAttribute("data-date");
+    
+            // Find the button with class "btn-secondary" in the parent container
+            const button = dateDropdown.previousElementSibling;
+    
+            if (button) {
+                // Set the selected date as the button text
+                button.textContent = selectedDate;
+            }
+        }
+    });    
+
+    searchButton.addEventListener("click", () => {
+        // Get the selected date
+        const selectedDateButton = document.getElementById("dateDropdown").previousElementSibling;
+        const selectedDate = selectedDateButton.textContent.trim();
+        const selectedJobButton = document.querySelector(".btn-group.dropdown:first-child .btn-secondary");
+        const selectedJob = selectedJobButton.textContent.trim();
+    
+        // Fetch job data
+        fetch(`/getJobDatesSearch`)
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.success) {
+                    // Filter dates for the selected job and year (e.g., 2023)
+                    const filteredDates = data.data.filter((job) => {
+                        return job.jobName === selectedJob && job.jobDate.startsWith(selectedDate);
+                    });
+    
+                    populateCustomerTable(filteredDates);
+
+                    totalEntries = filteredDates.length;
+                    
+                    updatePagination();
+                } else {
+                    console.error('Failed to retrieve job dates:', data.error);
+                }
+            })
+            .catch((error) => {
+                console.error('Error fetching job dates:', error);
+            });
+    
+        function populateCustomerTable(customerData) {
+            const tableBody = document.getElementById("customerTableBody");
+    
+            // Clear existing table rows
+            while (tableBody.firstChild) {
+                tableBody.removeChild(tableBody.firstChild);
+            }
+    
+            // Populate the table with customer data
+            customerData.forEach((customer) => {
+                const row = document.createElement("tr");
+    
+                // Create table cells for customer properties
+                const idCell = document.createElement("td");
+                idCell.textContent = customer.customerID;
+                row.appendChild(idCell);
+    
+                fetch(`/getCustomerByID?id=${customer.customerID}`)
+                .then((response) => response.json())
+                .then((data) => {
+                    const yeet = data.data;
+
+                    const nameCell = document.createElement("td");
+                    nameCell.textContent = yeet.Name; // Replace with the actual property name
+                    row.appendChild(nameCell);
+
+                    const contactCell = document.createElement("td");
+                    let contactText = '';
+
+                    if (yeet.MobilePhone) {
+                        contactText += yeet.MobilePhone;
+                    }
+
+                    if (yeet.MobilePhone && yeet.Phone) {
+                        contactText += ' - ';
+                    }
+
+                    if (yeet.Phone) {
+                        contactText += yeet.Phone;
+                    }
+
+                    contactCell.textContent = contactText;
+                    row.appendChild(contactCell);
+                })
+                .catch((error) => {
+                    console.error("Error fetching data:", error);
+                });
+    
+                tableBody.appendChild(row);
+            });
+        }
+    });                 
 });
