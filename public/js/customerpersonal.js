@@ -12,6 +12,37 @@ function toggleElements(isLoggedIn) {
     });
 }
 
+// Function to format a date in the format dd-mm-yyyy
+function formatDate(dateString) {
+    const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+    const date = new Date(dateString);
+    return date.toLocaleDateString('el-GR', options);
+}
+
+function sendDataToServer(data) {
+    // Use fetch or another method to send the JSON data to the server
+    fetch('/insertJob', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    })
+    .then((response) => response.json())
+    .then((result) => {
+        if (result.success) {
+            // Handle success
+            console.log('Data inserted successfully');
+        } else {
+            // Handle failure
+            console.error('Data insertion failed');
+        }
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     const params = new URLSearchParams(window.location.search);
     const customerID = params.get("id"); // Retrieve the customer ID from URL parameter
@@ -81,13 +112,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 });
 
-// Function to format a date in the format dd-mm-yyyy
-function formatDate(dateString) {
-    const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-    const date = new Date(dateString);
-    return date.toLocaleDateString('el-GR', options);
-}
-
 document.addEventListener('DOMContentLoaded', () => {
     const userNameLink = document.getElementById('userName');
     const logoutButton = document.getElementById('logoutButton');
@@ -133,30 +157,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
-
-function sendDataToServer(data) {
-    // Use fetch or another method to send the JSON data to the server
-    fetch('/insertJob', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-    })
-    .then((response) => response.json())
-    .then((result) => {
-        if (result.success) {
-            // Handle success
-            console.log('Data inserted successfully');
-        } else {
-            // Handle failure
-            console.error('Data insertion failed');
-        }
-    })
-    .catch((error) => {
-        console.error('Error:', error);
-    });
-}
 
 document.addEventListener('DOMContentLoaded', function () {
     const params = new URLSearchParams(window.location.search);

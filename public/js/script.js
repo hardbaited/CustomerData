@@ -302,10 +302,6 @@ searchInput.addEventListener("input", () => {
     updatePagination(); // Update pagination controls
 });
 
-document.addEventListener("DOMContentLoaded", () => {
-    fetchCustomerData();
-});
-
 document.getElementById("paginationControls").addEventListener("click", (event) => {
     if (event.target.tagName === "A") {
         currentPage = parseInt(event.target.textContent);
@@ -325,52 +321,6 @@ searchButton.addEventListener("click", () => {
     searchContainer.classList.toggle("expanded");
 });
 
-document.addEventListener('DOMContentLoaded', () => {
-    const userNameLink = document.getElementById('userName');
-    const logoutButton = document.getElementById('logoutButton');
-
-    // Send a GET request to the server to check if the user is logged in
-    fetch('/check-auth', {
-        method: 'GET',
-    })
-    .then((response) => response.json())
-    .then((data) => {
-        if (data.isLoggedIn) {
-            // User is logged in, update the user's name in the link
-            userNameLink.textContent = `Welcome, ${data.username}`;
-
-            // Add a click event listener to the user's name to toggle the logout button
-            userNameLink.addEventListener('click', () => {
-                logoutButton.style.display = logoutButton.style.display === 'block' ? 'none' : 'block';
-            });
-        }
-    })
-    .catch((error) => {
-        console.error('Error:', error);
-    });
-
-    // Add a click event listener to the "Logout" option
-    logoutButton.addEventListener('click', () => {
-        // Send a POST request to the server to perform logout
-        fetch('/logout', {
-            method: 'POST',
-        })
-        .then((response) => response.json())
-        .then((data) => {
-            if (data.success) {
-                // Handle successful logout (e.g., redirect to login page)
-                window.location.href = '/login.html';
-            } else {
-                // Handle logout failure
-                console.error('Logout failed:', data.message);
-            }
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-        });
-    });
-});
-
 // Check if the user is logged in by examining session data
 fetch('/check-auth') // Create a server route to check authentication status
     .then((response) => response.json())
@@ -383,10 +333,14 @@ fetch('/check-auth') // Create a server route to check authentication status
 });
 
 document.addEventListener("DOMContentLoaded", function () {
+    fetchCustomerData();
+
     // Get references to job and date dropdown elements
     const jobDropdown = document.querySelector(".btn-group.dropdown:first-child");
     const dateDropdown = document.getElementById("dateDropdown");
     const searchButton = document.getElementById("CustomSearchButton");
+    const userNameLink = document.getElementById('userName');
+    const logoutButton = document.getElementById('logoutButton');
 
     // Function to add unique date options (years) to the dropdown
     function addUniqueDateOption(year) {
@@ -540,5 +494,46 @@ document.addEventListener("DOMContentLoaded", function () {
                 tableBody.appendChild(row);
             });
         }
-    });                 
+    });     
+
+    // Send a GET request to the server to check if the user is logged in
+    fetch('/check-auth', {
+        method: 'GET',
+    })
+    .then((response) => response.json())
+    .then((data) => {
+        if (data.isLoggedIn) {
+            // User is logged in, update the user's name in the link
+            userNameLink.textContent = `Welcome, ${data.username}`;
+
+            // Add a click event listener to the user's name to toggle the logout button
+            userNameLink.addEventListener('click', () => {
+                logoutButton.style.display = logoutButton.style.display === 'block' ? 'none' : 'block';
+            });
+        }
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+
+    // Add a click event listener to the "Logout" option
+    logoutButton.addEventListener('click', () => {
+        // Send a POST request to the server to perform logout
+        fetch('/logout', {
+            method: 'POST',
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.success) {
+                // Handle successful logout (e.g., redirect to login page)
+                window.location.href = '/login.html';
+            } else {
+                // Handle logout failure
+                console.error('Logout failed:', data.message);
+            }
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    });
 });
