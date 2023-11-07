@@ -3,7 +3,7 @@
 .dark-theme {
     background-color: #23242a;
     color: #fff;
-    overflow: hidden;
+    overflow: auto;
 }
 
 /* Light mode styles */

@@ -54,8 +54,40 @@ function insertData() {
     });
 }
 
+function createSkeletonLoaderRows() {
+    const skeletonRows = [];
+
+    for (let i = 0; i < itemsPerPage; i++) {
+        const row = document.createElement("tr");
+        const cell1 = document.createElement("td");
+        const cell2 = document.createElement("td");
+        const cell3 = document.createElement("td");
+        
+        cell1.innerHTML = "&nbsp;";
+        cell2.innerHTML = "&nbsp;";
+        cell3.innerHTML = "&nbsp;";
+        
+        row.appendChild(cell1);
+        row.appendChild(cell2);
+        row.appendChild(cell3);
+        
+        row.classList.add("skeleton-loader");
+        skeletonRows.push(row);
+    }
+
+    return skeletonRows;
+}
+
 function fetchCustomerData() {
     const url = `/getCustomers?sort=${sortOrder}`;
+    const tbody = tableBody;
+
+    // Clear the table body before fetching data
+    tbody.innerHTML = "";
+
+    // Add skeleton loader rows while data is being fetched
+    const skeletonRows = createSkeletonLoaderRows();
+    skeletonRows.forEach((row) => tbody.appendChild(row));
 
     fetch(url)
         .then((response) => response.json())
@@ -64,13 +96,23 @@ function fetchCustomerData() {
                 originalCustomerData = data.data; // Store the original data
                 customerData = [...originalCustomerData]; // Create a copy for sorting
                 totalEntries = customerData.length;
+
+                // Remove the skeleton loader rows
+                skeletonRows.forEach((row) => tbody.removeChild(row));
+
                 sortAndDisplayData(currentPage);
             } else {
                 console.error("Error fetching customer data");
+
+                // Remove the skeleton loader rows in case of an error
+                skeletonRows.forEach((row) => tbody.removeChild(row));
             }
         })
         .catch((error) => {
             console.error("Error fetching data:", error);
+
+            // Remove the skeleton loader rows in case of an error
+            skeletonRows.forEach((row) => tbody.removeChild(row));
         });
 }
 
