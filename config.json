@@ -1,13 +1,13 @@
 {
   "database": {
-      "host": "217.76.58.97",
-      "port": 30001,
-      "user": "gamingmu",
-      "password": "gamingmultiverse!$!",
-      "databaseName": "CustomerData"
+    "host": "116.202.80.248",
+    "port": 30001,
+    "user": "gamingmu",
+    "password": "gamingmultiverse!$!",
+    "databaseName": "CustomerData"
   },
   "server": {
-      "port": 2001
+    "port": 2001
   }
 }
   
